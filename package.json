@@ -20,6 +20,7 @@
   "dependencies": {
     "axios": "^1.18.0",
     "detect-libc": "^2.1.2",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "fdir": "^6.5.0",
     "leaflet": "^1.9.4",

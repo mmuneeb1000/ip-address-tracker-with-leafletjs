@@ -10,16 +10,42 @@
   <body>
     <header>
       <h1>IP Address Tracker</h1>
-      <input type="search" />
+      <form class="ip-search" id="search-form">
+        <input
+          id="search-input"
+          type="search"
+          placeholder="Search for any Ip Address or Domain"
+        />
+        <button type="submit">
+          <img src="src/assets/images/icon-arrow.svg" alt="" />
+        </button>
+      </form>
+      <section class="tracker-card">
+        <article class="tracker-card__item">
+          <h2>IP Address</h2>
+          <p id="ip-address">-</p>
+        </article>
+
+        <article class="tracker-card__item">
+          <h2>Location</h2>
+          <p id="location">-</p>
+        </article>
+
+        <article class="tracker-card__item">
+          <h2>Timezone</h2>
+          <p id="timezone">-</p>
+        </article>
+
+        <article class="tracker-card__item">
+          <h2>ISP</h2>
+          <p id="isp">-</p>
+        </article>
+      </section>
     </header>
     <main>
-      <div>
-        
-      </div>
-      <div id="app"></div>
       <div id="map"></div>
     </main>
     <footer></footer>
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/assets/js/main.js"></script>
   </body>
 </html>
