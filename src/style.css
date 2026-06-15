@@ -28,7 +28,7 @@ header h1 {
 @media (max-width: 768px) {
   header {
     background-image: url(/src/assets/images/pattern-bg-mobile.png);
-    padding: 0.75rem;
+    padding: 0.625rem;
   }
 }
 * {
@@ -150,6 +150,13 @@ p {
   width: 100%;
 }
 
+@media (max-width: 768px) {
+  #map {
+    height: 90vh;
+    width: 100%;
+    margin-top: 7.5rem;
+  }
+}
 .leaflet-control-attribution {
   font-size: 8px !important;
 }

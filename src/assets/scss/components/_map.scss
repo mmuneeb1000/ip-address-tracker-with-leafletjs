@@ -1,6 +1,15 @@
+@use "../utils/" as u;
+
 #map {
   height: 65vh;
   width: 100%;
+}
+@media (max-width: 768px) {
+  #map {
+    height: 90vh;
+    width: 100%;
+    margin-top: u.rem(120);
+  }
 }
 
 .leaflet-control-attribution {
