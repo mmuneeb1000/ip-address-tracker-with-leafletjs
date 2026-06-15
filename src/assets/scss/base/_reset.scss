@@ -1,0 +1,13 @@
+@use "../utils/" as u;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: content-box;
+}
+
+body {
+  background-color: u.$dark-grey;
+  color: u.$white;
+  font-family: "Rubik", sans-serif;
+}

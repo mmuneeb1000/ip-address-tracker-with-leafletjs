@@ -1,0 +1,14 @@
+@use "../utils/" as u;
+
+.ip-search input {
+  padding: u.rem(16) u.rem(20);
+  width: u.rem(450);
+  font-size: u.rem(18);
+  border: none;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  cursor: pointer;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}

@@ -1,30 +1,42 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Fix for Leaflet marker icons in Vite
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
-
-let defaultIcon = L.icon({
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
   iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
+  iconShadow: iconShadow,
 });
 
-L.Marker.prototype.options.icon = defaultIcon;
-
-// Initialize map with default view
-let map = L.map("map").setView([51.505, -0.09], 13);
+let map = L.map("map", { zoomControl: false }).setView([51.505, -0.09], 13);
 let marker = null;
 
-// Add tile layer
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution:
-    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-}).addTo(map);
+L.tileLayer(
+  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+  {
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    subdomains: "abcd",
+    maxZoom: 19,
+    minZoom: 1,
+  },
+).addTo(map);
 
-// Function to update map view
+const blackIcon = L.divIcon({
+  html: `<div style="
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  ">
+    <img src="/src/assets/images/icon-location.svg" style="width: 42px; height: 42px;">
+  </div>`,
+  iconSize: [32, 48],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+  className: "custom-marker",
+});
+
 function updateMapView(lat, lng, locationName) {
   map.setView([lat, lng], 13);
 
@@ -32,11 +44,10 @@ function updateMapView(lat, lng, locationName) {
     map.removeLayer(marker);
   }
 
-  marker = L.marker([lat, lng]).addTo(map);
+  marker = L.marker([lat, lng], { icon: blackIcon }).addTo(map);
   marker.bindPopup(`<b>${locationName}</b>`).openPopup();
 }
 
-// Function to fetch IP data
 async function fetchIPData(ipAddress = "") {
   try {
     let url = "/api/ip-tracker";
@@ -65,7 +76,6 @@ async function fetchIPData(ipAddress = "") {
   }
 }
 
-// Function to update UI with IP data
 function updateUI(data) {
   document.getElementById("ip-address").textContent = data.ip || "-";
 

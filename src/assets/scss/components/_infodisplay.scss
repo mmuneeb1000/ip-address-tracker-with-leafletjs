@@ -1,0 +1,44 @@
+@use "../utils" as u;
+
+.tracker-card {
+  position: absolute;
+  z-index: 999;
+  top: u.rem(200);
+  border-radius: u.rem(16);
+  background-color: white;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: u.rem(36) 0 u.rem(48) 0;
+}
+
+.tracker-card__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: start;
+  width: u.rem(160);
+  height: 8vh;
+  border-right: 1px solid lightgrey;
+  padding: 0 u.rem(48) u.rem(24) u.rem(24);
+}
+
+.tracker-card__item:nth-of-type(4) {
+  border-right: none;
+}
+
+@media (max-width: 768px) {
+  .tracker-card {
+    display: flex;
+    width: 80%;
+    top: u.rem(150);
+    flex-direction: column;
+    padding: u.rem(20);
+    gap: u.rem(12);
+  }
+  .tracker-card__item {
+    display: block;
+    text-align: center;
+    padding: 0;
+    border-right: none;
+  }
+}

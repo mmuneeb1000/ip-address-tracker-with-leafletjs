@@ -20,12 +20,9 @@ async function getIPAddress(domainOrIP = "") {
       if (isIP) {
         return domainOrIP;
       } else {
-        // For domains, we need a different approach
-        // You might want to use a DNS lookup API
         throw new Error("Domain to IP conversion requires additional service");
       }
     } else {
-      // Get the requester's own IP
       const apiKey = process.env.IPIFY_API_KEY;
       url = apiKey
         ? `https://geo.ipify.org/api/v2/country?apiKey=${apiKey}`
@@ -93,7 +90,6 @@ app.get("/api/ip-tracker", async (req, res) => {
         }
       }
     } else {
-      // Get the requester's own IP using ipify
       const ipifyUrl = process.env.IPIFY_API_KEY
         ? `https://geo.ipify.org/api/v2/country?apiKey=${process.env.IPIFY_API_KEY}`
         : "https://api.ipify.org?format=json";
@@ -102,7 +98,6 @@ app.get("/api/ip-tracker", async (req, res) => {
       targetIP = ipifyResponse.data.ip;
     }
 
-    // Step 2: Get geolocation data for the IP
     const geoData = await getGeolocationData(targetIP);
 
     res.json(geoData);
@@ -114,7 +109,6 @@ app.get("/api/ip-tracker", async (req, res) => {
   }
 });
 
-// Alternative: Direct ipify endpoint (returns just the IP)
 app.get("/api/my-ip", async (req, res) => {
   try {
     const apiKey = process.env.IPIFY_API_KEY;

@@ -1,0 +1,34 @@
+@use "../utils/" as u;
+
+h1 {
+  font-size: u.rem(30);
+  font-weight: 500;
+  padding: u.rem(32) 0;
+}
+
+h2 {
+  font-size: u.rem(12);
+  color: u.$light-grey;
+  font-weight: u.$font-semibold;
+  text-transform: uppercase;
+  letter-spacing: u.rem(1);
+}
+
+p {
+  font-size: u.rem(22);
+  color: u.$dark-grey;
+  padding-top: u.rem(8);
+  font-weight: u.$font-semibold;
+}
+@media (max-width: 768px) {
+  h1 {
+    font-size: u.rem(24);
+    padding: u.rem(16) 0;
+  }
+  h2 {
+    font-size: u.rem(10);
+  }
+  p {
+    font-size: u.rem(18);
+  }
+}

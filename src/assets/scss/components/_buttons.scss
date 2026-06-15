@@ -1,0 +1,13 @@
+@use "../utils" as u;
+
+.ip-search button {
+  background-color: u.$black;
+  padding: u.rem(18) u.rem(20);
+  border: none;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  cursor: pointer;
+  &:hover {
+    background-color: u.$dark-grey;
+  }
+}
