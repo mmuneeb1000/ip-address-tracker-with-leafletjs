@@ -4,14 +4,12 @@ import "leaflet/dist/leaflet.css";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 
-// fix default icon
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: icon,
   shadowUrl: iconShadow,
 });
 
-// map init
 const map = L.map("map", { zoomControl: false }).setView(
   [24.8607, 67.0011],
   13,
@@ -30,10 +28,8 @@ L.tileLayer(
   },
 ).addTo(map);
 
-// API base
 const API_URL = import.meta.env.VITE_API_URL;
 
-// map update (mobile optimized)
 function updateMapView(lat, lng, locationName) {
   const zoom = window.innerWidth < 768 ? 11 : 13;
 
@@ -52,7 +48,6 @@ function updateMapView(lat, lng, locationName) {
   marker.bindPopup(`<b>${locationName}</b>`).openPopup();
 }
 
-// fetch IP
 async function fetchIPData(ipAddress = "") {
   try {
     let url = `${API_URL}/api/ip-tracker`;
@@ -85,7 +80,6 @@ async function fetchIPData(ipAddress = "") {
   }
 }
 
-// UI update
 function updateUI(data) {
   document.getElementById("ip-address").textContent = data.ip || "-";
 
@@ -100,7 +94,6 @@ function updateUI(data) {
   document.getElementById("isp").textContent = data.isp || "-";
 }
 
-// form
 document.getElementById("search-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const val = document.getElementById("search-input").value.trim();
@@ -108,5 +101,4 @@ document.getElementById("search-form").addEventListener("submit", (e) => {
   if (val) fetchIPData(val);
 });
 
-// initial load
 fetchIPData();
