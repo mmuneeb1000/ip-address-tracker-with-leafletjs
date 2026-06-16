@@ -92,6 +92,11 @@ p {
   }
 }
 
+.ip-search input[type=search] {
+  outline: none;
+  box-shadow: none;
+}
+
 .ip-search button {
   background-color: hsl(0, 0%, 3%);
   padding: 1.125rem 1.25rem;
