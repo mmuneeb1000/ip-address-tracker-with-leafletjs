@@ -7,9 +7,11 @@
   border-radius: u.rem(16);
   background-color: white;
   display: grid;
+  height: auto;
   grid-template-columns: repeat(4, 1fr);
-  padding: u.rem(36) 0 u.rem(48) 0;
+  padding: u.rem(24) 0 u.rem(24) 0;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+  align-items: start;
 }
 
 .tracker-card__item {
@@ -18,9 +20,9 @@
   justify-content: flex-start;
   align-items: start;
   width: u.rem(160);
-  height: 8vh;
+  height: auto;
+  padding: 0 u.rem(32);
   border-right: 1px solid lightgrey;
-  padding: 0 u.rem(48) u.rem(24) u.rem(24);
 }
 
 .tracker-card__item:nth-of-type(4) {
