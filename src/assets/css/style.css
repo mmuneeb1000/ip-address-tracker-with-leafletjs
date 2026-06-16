@@ -113,7 +113,7 @@ p {
 .tracker-card {
   position: absolute;
   z-index: 999;
-  top: 9.375rem;
+  top: 10rem;
   border-radius: 1rem;
   background-color: white;
   display: grid;
