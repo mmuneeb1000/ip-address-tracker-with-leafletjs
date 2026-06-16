@@ -7,9 +7,10 @@
     "dev": "vite",
     "server": "node server.js",
     "start": "concurrently \"npm run dev\" \"npm run server\"",
-    "build": "vite build",
     "preview": "vite preview",
-    "sass": "sass src/assets/scss/main.scss src/style.css --watch"
+    "sass": "sass src/assets/scss/main.scss src/style.css --watch",
+    "install:all": "npm install --no-optional && cd client && npm install --no-optional && cd ../server && npm install --no-optional",
+    "build": "cd client && npm run build"
   },
   "devDependencies": {
     "concurrently": "^10.0.3",
