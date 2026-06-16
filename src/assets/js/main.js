@@ -1,5 +1,6 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import iconLocation from "../../assets/images/icon-location.svg";
 
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -33,7 +34,7 @@ const blackIcon = L.divIcon({
     align-items: center;
     justify-content: center;
   ">
-    <img src="/src/assets/images/icon-location.svg" style="width: 42px; height: 42px;">
+    <img src="${iconLocation}" style="width: 42px; height: 42px;">
   </div>`,
   iconSize: [32, 32],
   iconAnchor: [16, 32], // Anchor at bottom center of the icon
