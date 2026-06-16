@@ -16,44 +16,33 @@ function isValidIP(ip) {
 
 app.get("/api/ip-tracker", async (req, res) => {
   try {
-    let { ipAddress } = req.query;
+    const ip =
+      req.query.ipAddress ||
+      req.headers["x-forwarded-for"]?.split(",")[0] ||
+      req.socket.remoteAddress;
 
-    if (!ipAddress) {
-      const ipRes = await axios.get("https://api.ipify.org?format=json");
-      ipAddress = ipRes.data.ip;
+    const geoRes = await fetch(GEO_API_URL);
+
+    if (!geoRes.ok) {
+      throw new Error("Geo lookup failed");
     }
 
-    if (!isValidIP(ipAddress)) {
-      return res.status(400).json({ error: "Invalid IP address" });
-    }
+    const geoData = await geoRes.json();
 
-    const geoRes = await axios.get(`https://ipapi.co/${ipAddress}/json/`);
-
-    const g = geoRes.data;
-
-    if (!g || g.error) {
-      return res.status(400).json({ error: "Geolocation failed" });
-    }
-
-    res.json({
-      ip: g.ip,
+    return res.json({
+      ip,
       location: {
-        city: g.city,
-        region: g.region,
-        country: g.country_name,
-        lat: g.latitude,
-        lng: g.longitude,
-        postalCode: g.postal,
+        lat: geoData.lat,
+        lng: geoData.lng,
+        city: geoData.city,
+        country: geoData.country,
       },
-      timezone: g.timezone,
-      isp: g.org,
+      isp: geoData.isp,
+      timezone: geoData.timezone,
     });
   } catch (err) {
-    console.error("SERVER ERROR:", err.message);
-
-    res.status(500).json({
-      error: "Server crashed while fetching IP data",
-    });
+    console.error(err);
+    res.status(500).json({ error: "Server crashed while fetching IP data" });
   }
 });
 
