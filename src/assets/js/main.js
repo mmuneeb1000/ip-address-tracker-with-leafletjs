@@ -9,7 +9,7 @@ L.Icon.Default.mergeOptions({
   iconShadow: iconShadow,
 });
 
-let map = L.map("map", { zoomControl: false }).setView([51.505, -0.09], 13);
+let map = L.map("map", { zoomControl: false }).setView([24.8607, 67.0011], 13);
 let marker = null;
 
 L.tileLayer(
@@ -38,7 +38,17 @@ const blackIcon = L.divIcon({
 });
 
 function updateMapView(lat, lng, locationName) {
-  map.setView([lat, lng], 13);
+  const zoom = window.innerWidth < 768 ? 11 : 13;
+
+  if (window.innerWidth < 768) {
+    const point = map.project([lat, lng], zoom);
+    point.y -= 80; // adjust as needed
+
+    const center = map.unproject(point, zoom);
+    map.setView(center, zoom);
+  } else {
+    map.setView([lat, lng], zoom);
+  }
 
   if (marker) {
     map.removeLayer(marker);
@@ -92,7 +102,6 @@ function updateUI(data) {
   document.getElementById("isp").textContent = data.isp || "-";
 }
 
-// Handle form submission
 const searchForm = document.getElementById("search-form");
 const searchInput = document.getElementById("search-input");
 
@@ -107,12 +116,9 @@ searchForm.addEventListener("submit", async (e) => {
   }
 });
 
-// Load default IP (user's IP) on page load
 fetchIPData();
 
-// Basic input validation
 searchInput.addEventListener("input", (e) => {
-  // Optional: Add real-time validation
   const value = e.target.value.trim();
   if (value === "") {
     searchInput.setCustomValidity("");

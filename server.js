@@ -66,61 +66,21 @@ async function getGeolocationData(ipAddress) {
 }
 
 app.get("/api/ip-tracker", async (req, res) => {
-  try {
-    const { ipAddress } = req.query;
-    let targetIP;
+  const formattedData = {
+    ip: "8.8.8.8",
+    location: {
+      city: "Mountain View",
+      region: "California",
+      country: "United States",
+      lat: 37.4056,
+      lng: -122.0775,
+      postalCode: "94043",
+    },
+    timezone: "-07:00",
+    isp: "Google LLC",
+  };
 
-    if (ipAddress && ipAddress !== "") {
-      // Check if input is a valid IP format
-      const isIP = /^(\d{1,3}\.){3}\d{1,3}$/.test(ipAddress);
-      if (isIP) {
-        targetIP = ipAddress;
-      } else {
-        try {
-          const dnsResponse = await axios.get(
-            `https://dns.google/resolve?name=${ipAddress}&type=A`,
-          );
-          if (dnsResponse.data.Answer && dnsResponse.data.Answer.length > 0) {
-            targetIP = dnsResponse.data.Answer[0].data;
-          } else {
-            throw new Error("Domain not found");
-          }
-        } catch (dnsError) {
-          throw new Error("Unable to resolve domain to IP address");
-        }
-      }
-    } else {
-      const ipifyUrl = process.env.IPIFY_API_KEY
-        ? `https://geo.ipify.org/api/v2/country?apiKey=${process.env.IPIFY_API_KEY}`
-        : "https://api.ipify.org?format=json";
-
-      const ipifyResponse = await axios.get(ipifyUrl);
-      targetIP = ipifyResponse.data.ip;
-    }
-
-    const geoData = await getGeolocationData(targetIP);
-
-    res.json(geoData);
-  } catch (error) {
-    console.error("Error:", error.message);
-    res.status(500).json({
-      error: error.message || "Failed to fetch IP information",
-    });
-  }
-});
-
-app.get("/api/my-ip", async (req, res) => {
-  try {
-    const apiKey = process.env.IPIFY_API_KEY;
-    const url = apiKey
-      ? `https://geo.ipify.org/api/v2/country?apiKey=${apiKey}`
-      : "https://api.ipify.org?format=json";
-
-    const response = await axios.get(url);
-    res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to get IP address" });
-  }
+  res.json(formattedData);
 });
 
 app.listen(PORT, () => {
