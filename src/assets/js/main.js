@@ -17,7 +17,6 @@ const map = L.map("map", { zoomControl: false }).setView(
 
 let marker = null;
 
-// tiles
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
   {
@@ -27,6 +26,20 @@ L.tileLayer(
     minZoom: 1,
   },
 ).addTo(map);
+
+const blackIcon = L.divIcon({
+  html: `<div style="
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  ">
+    <img src="/src/assets/images/icon-location.svg" style="width: 42px; height: 42px;">
+  </div>`,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32], // Anchor at bottom center of the icon
+  popupAnchor: [0, -32], // Popup above the icon
+  className: "custom-marker",
+});
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -44,7 +57,7 @@ function updateMapView(lat, lng, locationName) {
 
   if (marker) map.removeLayer(marker);
 
-  marker = L.marker([lat, lng]).addTo(map);
+  marker = L.marker([lat, lng], { icon: blackIcon }).addTo(map);
   marker.bindPopup(`<b>${locationName}</b>`).openPopup();
 }
 
