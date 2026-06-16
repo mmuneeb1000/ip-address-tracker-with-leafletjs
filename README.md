@@ -27,8 +27,7 @@ A browser-based IP tracking application that resolves the user’s current IP an
 ### 4. Backend Integration
 
 - Install express, cors, axios, dotenv
-- Built a backend API endpoint `/api/ip-tracker`
-- Implemented IP detection using request headers (`x-forwarded-for`)
+- Built a backend API endpoint `/api/ip-tracker` with IPIFY
 - Added support for optional query-based IP lookup
 - Connected geolocation service to resolve IP into:
   - Latitude and longitude
@@ -93,7 +92,7 @@ A browser-based IP tracking application that resolves the user’s current IP an
 ## Deployment
 
 - Frontend: [Netlify](https://stunning-toffee-e1de3d.netlify.app/)
-- Backend: Render or equivalent Node hosting
+- Backend: [Render](https://ip-address-tracker-with-leafletjs.onrender.com/)
 
 ## Key Learning Outcomes
 
