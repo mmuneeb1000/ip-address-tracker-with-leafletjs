@@ -6,13 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-
 app.use(cors());
-app.use(express.json());
-
-function isValidIP(ip) {
-  return /^(\d{1,3}\.){3}\d{1,3}$/.test(ip);
-}
 
 app.get("/api/ip-tracker", async (req, res) => {
   try {
@@ -21,33 +15,33 @@ app.get("/api/ip-tracker", async (req, res) => {
       req.headers["x-forwarded-for"]?.split(",")[0] ||
       req.socket.remoteAddress;
 
-    const geoRes = await fetch(GEO_API_URL);
+    const cleanIP = ip?.replace("::ffff:", "");
 
-    if (!geoRes.ok) {
-      throw new Error("Geo lookup failed");
+    const response = await axios.get(`https://ipwho.is/${cleanIP || ""}`);
+
+    const data = response.data;
+
+    if (!data.success) {
+      throw new Error("IP lookup failed");
     }
 
-    const geoData = await geoRes.json();
-
-    return res.json({
-      ip,
+    res.json({
+      ip: cleanIP,
       location: {
-        lat: geoData.lat,
-        lng: geoData.lng,
-        city: geoData.city,
-        country: geoData.country,
+        lat: data.latitude,
+        lng: data.longitude,
+        city: data.city,
+        country: data.country,
+        region: data.region,
       },
-      isp: geoData.isp,
-      timezone: geoData.timezone,
+      isp: data.connection?.isp,
+      timezone: data.timezone?.id,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Server crashed while fetching IP data" });
+    res.status(500).json({ error: "IP lookup failed" });
   }
 });
 
 const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("Server running on", PORT);
-});
+app.listen(PORT, () => console.log("Running on", PORT));
