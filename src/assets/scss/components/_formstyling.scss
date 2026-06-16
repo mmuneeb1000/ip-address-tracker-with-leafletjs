@@ -9,8 +9,9 @@
   border-bottom-left-radius: 12px;
   cursor: pointer;
   @media (max-width: 768px) {
-    width: 100%;
-    font-size: u.rem(14);
+    width: u.rem(260);
+    font-size: u.rem(12);
+    padding: u.rem(17) u.rem(20);
   }
 }
 

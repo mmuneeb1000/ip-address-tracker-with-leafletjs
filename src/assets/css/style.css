@@ -88,8 +88,9 @@ p {
 }
 @media (max-width: 768px) {
   .ip-search input {
-    width: 100%;
-    font-size: 0.875rem;
+    width: 16.25rem;
+    font-size: 0.75rem;
+    padding: 1.0625rem 1.25rem;
   }
 }
 
