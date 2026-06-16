@@ -10,6 +10,8 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+const cache = new Map();
+const CACHE_TTL = 5 * 60 * 1000;
 
 async function getIPAddress(domainOrIP = "") {
   try {
@@ -71,7 +73,6 @@ app.get("/api/ip-tracker", async (req, res) => {
     let targetIP;
 
     if (ipAddress && ipAddress !== "") {
-      // Check if input is a valid IP format
       const isIP = /^(\d{1,3}\.){3}\d{1,3}$/.test(ipAddress);
       if (isIP) {
         targetIP = ipAddress;
