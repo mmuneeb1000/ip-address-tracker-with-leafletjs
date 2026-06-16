@@ -1,9 +1,6 @@
 import express from "express";
 import cors from "cors";
 import axios from "axios";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -17,20 +14,25 @@ app.get("/api/ip-tracker", async (req, res) => {
 
     const cleanIP = ip?.replace("::ffff:", "");
 
-    const geoRes = await axios.get(`${process.env.GEO_API_URL}?ip=${cleanIP}`);
+    const response = await axios.get(`https://ipwho.is/${cleanIP || ""}`);
 
-    const geoData = geoRes.data;
+    const data = response.data;
+
+    if (!data.success) {
+      throw new Error("IP lookup failed");
+    }
 
     res.json({
       ip: cleanIP,
       location: {
-        lat: geoData.lat,
-        lng: geoData.lng,
-        city: geoData.city,
-        country: geoData.country,
+        lat: data.latitude,
+        lng: data.longitude,
+        city: data.city,
+        country: data.country,
+        region: data.region,
       },
-      isp: geoData.isp,
-      timezone: geoData.timezone,
+      isp: data.connection?.isp || "Unknown",
+      timezone: data.timezone?.id || "Unknown",
     });
   } catch (err) {
     console.error(err);
@@ -41,4 +43,4 @@ app.get("/api/ip-tracker", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log("Running on", PORT));
+app.listen(PORT, () => console.log("Server running on", PORT));
