@@ -3,7 +3,7 @@
 .tracker-card {
   position: absolute;
   z-index: 999;
-  top: u.rem(170);
+  top: u.rem(150);
   border-radius: u.rem(16);
   background-color: white;
   display: grid;
@@ -30,7 +30,6 @@
   .tracker-card {
     display: flex;
     width: 80%;
-    top: u.rem(150);
     flex-direction: column;
     padding: u.rem(20);
     gap: u.rem(12);
