@@ -49,7 +49,7 @@ function updateMapView(lat, lng, locationName) {
 
   if (window.innerWidth < 768) {
     const point = map.project([lat, lng], zoom);
-    point.y -= 120;
+    point.y -= 80;
     const center = map.unproject(point, zoom);
     map.setView(center, zoom);
   } else {

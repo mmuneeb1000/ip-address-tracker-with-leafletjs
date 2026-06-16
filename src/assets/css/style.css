@@ -89,6 +89,7 @@ p {
 @media (max-width: 768px) {
   .ip-search input {
     width: 100%;
+    font-size: 0.875rem;
   }
 }
 
