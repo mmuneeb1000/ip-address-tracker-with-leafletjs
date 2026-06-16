@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "sass": "sass src/assets/scss/main.scss src/style.css --watch"
+    "sass": "sass src/assets/scss/main.scss src/assets/css/style.css --watch"
   },
   "devDependencies": {
     "concurrently": "^10.0.3",
