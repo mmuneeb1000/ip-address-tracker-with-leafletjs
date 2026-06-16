@@ -8,123 +8,68 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  }),
+);
+
 app.use(express.json());
-const cache = new Map();
-const CACHE_TTL = 5 * 60 * 1000;
 
-async function getIPAddress(domainOrIP = "") {
-  try {
-    let url;
-
-    if (domainOrIP && domainOrIP !== "") {
-      const isIP = /^(\d{1,3}\.){3}\d{1,3}$/.test(domainOrIP);
-      if (isIP) {
-        return domainOrIP;
-      } else {
-        throw new Error("Domain to IP conversion requires additional service");
-      }
-    } else {
-      const apiKey = process.env.IPIFY_API_KEY;
-      url = apiKey
-        ? `https://geo.ipify.org/api/v2/country?apiKey=${apiKey}`
-        : "https://api.ipify.org?format=json";
-
-      const response = await axios.get(url);
-      return response.data.ip;
-    }
-  } catch (error) {
-    console.error("Error getting IP from ipify:", error.message);
-    throw error;
-  }
+// simple IP validator
+function isValidIP(ip) {
+  return /^(\d{1,3}\.){3}\d{1,3}$/.test(ip);
 }
 
-async function getGeolocationData(ipAddress) {
-  try {
-    const url = `https://ipapi.co/${ipAddress}/json/`;
-    const response = await axios.get(url);
-
-    if (response.data.error) {
-      throw new Error("Geolocation lookup failed");
-    }
-
-    return {
-      ip: response.data.ip,
-      location: {
-        city: response.data.city,
-        region: response.data.region,
-        country: response.data.country_name,
-        lat: response.data.latitude,
-        lng: response.data.longitude,
-        postalCode: response.data.postal,
-      },
-      timezone: response.data.timezone,
-      isp: response.data.org,
-    };
-  } catch (error) {
-    console.error("Error fetching geolocation:", error.message);
-    throw error;
-  }
-}
-
+// MAIN ROUTE
 app.get("/api/ip-tracker", async (req, res) => {
   try {
     const { ipAddress } = req.query;
-    let targetIP;
 
-    if (ipAddress && ipAddress !== "") {
-      const isIP = /^(\d{1,3}\.){3}\d{1,3}$/.test(ipAddress);
-      if (isIP) {
-        targetIP = ipAddress;
-      } else {
-        try {
-          const dnsResponse = await axios.get(
-            `https://dns.google/resolve?name=${ipAddress}&type=A`,
-          );
-          if (dnsResponse.data.Answer && dnsResponse.data.Answer.length > 0) {
-            targetIP = dnsResponse.data.Answer[0].data;
-          } else {
-            throw new Error("Domain not found");
-          }
-        } catch (dnsError) {
-          throw new Error("Unable to resolve domain to IP address");
-        }
-      }
-    } else {
-      const ipifyUrl = process.env.IPIFY_API_KEY
-        ? `https://geo.ipify.org/api/v2/country?apiKey=${process.env.IPIFY_API_KEY}`
-        : "https://api.ipify.org?format=json";
+    let targetIP = ipAddress;
 
-      const ipifyResponse = await axios.get(ipifyUrl);
-      targetIP = ipifyResponse.data.ip;
+    // if no IP provided → get user's IP
+    if (!targetIP) {
+      const ipRes = await axios.get("https://api.ipify.org?format=json");
+      targetIP = ipRes.data.ip;
     }
 
-    const geoData = await getGeolocationData(targetIP);
+    // optional validation
+    if (!isValidIP(targetIP)) {
+      return res.status(400).json({ error: "Invalid IP address" });
+    }
 
-    res.json(geoData);
-  } catch (error) {
-    console.error("Error:", error.message);
+    // geolocation
+    const geoRes = await axios.get(`https://ipapi.co/${targetIP}/json/`);
+    const g = geoRes.data;
+
+    if (!g || g.error) {
+      return res.status(400).json({ error: "Geolocation failed" });
+    }
+
+    const formatted = {
+      ip: g.ip,
+      location: {
+        city: g.city || "-",
+        region: g.region || "-",
+        country: g.country_name || "-",
+        lat: g.latitude,
+        lng: g.longitude,
+        postalCode: g.postal || "-",
+      },
+      timezone: g.timezone || "-",
+      isp: g.org || "-",
+    };
+
+    res.json(formatted);
+  } catch (err) {
+    console.error(err.message);
     res.status(500).json({
-      error: error.message || "Failed to fetch IP information",
+      error: "Server failed to fetch IP data",
     });
   }
 });
 
-app.get("/api/my-ip", async (req, res) => {
-  try {
-    const apiKey = process.env.IPIFY_API_KEY;
-    const url = apiKey
-      ? `https://geo.ipify.org/api/v2/country?apiKey=${apiKey}`
-      : "https://api.ipify.org?format=json";
-
-    const response = await axios.get(url);
-    res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to get IP address" });
-  }
-});
-
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Using ipify for IP lookup`);
+  console.log(`Server running on ${PORT}`);
 });

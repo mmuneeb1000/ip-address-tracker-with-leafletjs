@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "node server.js",
-    "start": "concurrently \"npm run dev\" \"npm run server\"",
+    "start": "npm run dev",
     "build": "vite build",
     "preview": "vite preview",
     "sass": "sass src/assets/scss/main.scss src/style.css --watch"
@@ -18,11 +17,7 @@
   "description": "![Design preview for the IP address tracker coding challenge](preview.jpg)",
   "main": "index.js",
   "dependencies": {
-    "axios": "^1.18.0",
-    "cors": "^2.8.6",
     "detect-libc": "^2.1.2",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
     "fdir": "^6.5.0",
     "leaflet": "^1.9.4",
     "nanoid": "^3.3.12",
