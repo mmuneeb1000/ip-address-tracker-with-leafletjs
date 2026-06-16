@@ -16,6 +16,7 @@
   "description": "![Design preview for the IP address tracker coding challenge](preview.jpg)",
   "main": "index.js",
   "dependencies": {
+    "cors": "^2.8.6",
     "detect-libc": "^2.1.2",
     "dotenv": "^17.4.2",
     "fdir": "^6.5.0",
