@@ -17,29 +17,26 @@ app.get("/api/ip-tracker", async (req, res) => {
 
     const cleanIP = ip?.replace("::ffff:", "");
 
-    const response = await axios.get(`https://ipwho.is/${cleanIP || ""}`);
+    const geoRes = await axios.get(`${process.env.GEO_API_URL}?ip=${cleanIP}`);
 
-    const data = response.data;
-
-    if (!data.success) {
-      throw new Error("IP lookup failed");
-    }
+    const geoData = geoRes.data;
 
     res.json({
       ip: cleanIP,
       location: {
-        lat: data.latitude,
-        lng: data.longitude,
-        city: data.city,
-        country: data.country,
-        region: data.region,
+        lat: geoData.lat,
+        lng: geoData.lng,
+        city: geoData.city,
+        country: geoData.country,
       },
-      isp: data.connection?.isp,
-      timezone: data.timezone?.id,
+      isp: geoData.isp,
+      timezone: geoData.timezone,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "IP lookup failed" });
+    res.status(500).json({
+      error: "Server crashed while fetching IP data",
+    });
   }
 });
 
